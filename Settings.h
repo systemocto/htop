@@ -96,6 +96,7 @@ typedef struct Settings_ {
    #ifdef HAVE_LIBHWLOC
    bool topologyAffinity;
    #endif
+   bool showRateInBits;
 
    bool changed;
    uint64_t lastUpdate;
