@@ -24,7 +24,7 @@ static uint32_t cached_rxb_diff;
 static uint32_t cached_rxp_diff;
 static uint32_t cached_txb_diff;
 static uint32_t cached_txp_diff;
-static int showRateInBits;
+static int32_t showRateInBits;
 
 static void NetworkIOMeter_updateValues(Meter* this) {
    const ProcessList* pl = this->pl;
