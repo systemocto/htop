@@ -24,10 +24,13 @@ static uint32_t cached_rxb_diff;
 static uint32_t cached_rxp_diff;
 static uint32_t cached_txb_diff;
 static uint32_t cached_txp_diff;
+static int showRateInBits;
 
 static void NetworkIOMeter_updateValues(Meter* this) {
    const ProcessList* pl = this->pl;
    static uint64_t cached_last_update = 0;
+   
+   showRateInBits = pl->settings->showRateInBits ? 1 : 0;
 
    uint64_t passedTimeInMs = pl->realtimeMs - cached_last_update;
 
@@ -137,14 +140,20 @@ static void NetworkIOMeter_display(ATTR_UNUSED const Object* cast, RichString* o
    int len;
 
    RichString_writeAscii(out, CRT_colors[METER_TEXT], "rx: ");
-   Meter_humanUnit(buffer, cached_rxb_diff, sizeof(buffer));
+   if (showRateInBits == 0) Meter_humanUnit(buffer, cached_rxb_diff, sizeof(buffer));
+   else Meter_humanUnit(buffer, cached_rxb_diff * 8, sizeof(buffer));
+   
    RichString_appendAscii(out, CRT_colors[METER_VALUE_IOREAD], buffer);
-   RichString_appendAscii(out, CRT_colors[METER_VALUE_IOREAD], "iB/s");
+   if (showRateInBits == 0) RichString_appendAscii(out, CRT_colors[METER_VALUE_IOREAD], "iB/s");
+   else RichString_appendAscii(out, CRT_colors[METER_VALUE_IOREAD], "ib/s");
 
    RichString_appendAscii(out, CRT_colors[METER_TEXT], " tx: ");
-   Meter_humanUnit(buffer, cached_txb_diff, sizeof(buffer));
+   if (showRateInBits == 0) Meter_humanUnit(buffer, cached_txb_diff, sizeof(buffer));
+   else Meter_humanUnit(buffer, cached_txb_diff * 8, sizeof(buffer));
+
    RichString_appendAscii(out, CRT_colors[METER_VALUE_IOWRITE], buffer);
-   RichString_appendAscii(out, CRT_colors[METER_VALUE_IOWRITE], "iB/s");
+   if (showRateInBits == 0) RichString_appendAscii(out, CRT_colors[METER_VALUE_IOWRITE], "iB/s");
+   else RichString_appendAscii(out, CRT_colors[METER_VALUE_IOWRITE], "ib/s");
 
    len = xSnprintf(buffer, sizeof(buffer), " (%u/%u pkts/s) ", cached_rxp_diff, cached_txp_diff);
    RichString_appendnAscii(out, CRT_colors[METER_TEXT], buffer, len);
