@@ -377,6 +377,8 @@ static bool Settings_read(Settings* this, const char* fileName, unsigned int ini
          // old (no screen) naming also supported for backwards compatibility
          screen = Settings_defaultScreens(this);
          screen->allBranchesCollapsed = atoi(option[1]);
+      } else if (String_eq(option[0], "showRateInBits")) {
+         this->showRateInBits = atoi(option[1]);
       } else if (String_eq(option[0], "hide_kernel_threads")) {
          this->hideKernelThreads = atoi(option[1]);
       } else if (String_eq(option[0], "hide_userland_threads")) {
@@ -603,6 +605,7 @@ int Settings_write(const Settings* this, bool onCrash) {
    printSettingInteger("cpu_count_from_one", this->countCPUsFromOne);
    printSettingInteger("show_cpu_usage", this->showCPUUsage);
    printSettingInteger("show_cpu_frequency", this->showCPUFrequency);
+   printSettingInteger("show_rate_in_bits", this->showRateInBits);
    #ifdef BUILD_WITH_CPU_TEMP
    printSettingInteger("show_cpu_temperature", this->showCPUTemperature);
    printSettingInteger("degree_fahrenheit", this->degreeFahrenheit);
@@ -704,6 +707,7 @@ Settings* Settings_new(unsigned int initialCpuCount, Hashtable* dynamicColumns) 
    #ifdef HAVE_LIBHWLOC
    this->topologyAffinity = false;
    #endif
+   this->showRateInBits = true;
 
    this->screens = xCalloc(Platform_numberOfDefaultScreens * sizeof(ScreenSettings*), 1);
    this->nScreens = 0;
