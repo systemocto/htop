@@ -156,6 +156,6 @@ DisplayOptionsPanel* DisplayOptionsPanel_new(Settings* settings, ScreenManager* 
    #ifdef HAVE_LIBHWLOC
    Panel_add(super, (Object*) CheckItem_newByRef("Show topology when selecting affinity by default", &(settings->topologyAffinity)));
    #endif
-   Panel_add(super, (Object*) CheckItem_newByRef("Show rate in bits/second", &(settings->showRateInBits)));
+   Panel_add(super, (Object*) CheckItem_newByRef("Show network i/o rate in bits/second", &(settings->showRateInBits)));
    return this;
 }
