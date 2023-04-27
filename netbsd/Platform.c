@@ -274,6 +274,7 @@ void Platform_setMemoryValues(Meter* this) {
    this->values[MEMORY_METER_USED] = pl->usedMem;
    this->values[MEMORY_METER_BUFFERS] = pl->buffersMem;
    // this->values[MEMORY_METER_SHARED] = "shared memory, like tmpfs and shm"
+   // this->values[MEMORY_METER_COMPRESSED] = "compressed memory, like zswap on linux"
    this->values[MEMORY_METER_CACHE] = pl->cachedMem;
    // this->values[MEMORY_METER_AVAILABLE] = "available memory"
 }
@@ -282,7 +283,8 @@ void Platform_setSwapValues(Meter* this) {
    const ProcessList* pl = this->pl;
    this->total = pl->totalSwap;
    this->values[SWAP_METER_USED] = pl->usedSwap;
-   this->values[SWAP_METER_CACHE] = NAN;
+   // this->values[SWAP_METER_CACHE] = "pages that are both in swap and RAM, like SwapCached on linux"
+   // this->values[SWAP_METER_FRONTSWAP] = "pages that are accounted to swap but stored elsewhere, like frontswap on linux"
 }
 
 char* Platform_getProcessEnv(pid_t pid) {
@@ -413,7 +415,7 @@ bool Platform_getNetworkIO(NetworkIOData* data) {
       if (ifa->ifa_flags & IFF_LOOPBACK)
          continue;
 
-      const struct if_data* ifd = (const struct if_data *)ifa->ifa_data;
+      const struct if_data* ifd = (const struct if_data*)ifa->ifa_data;
 
       data->bytesReceived += ifd->ifi_ibytes;
       data->packetsReceived += ifd->ifi_ipackets;
